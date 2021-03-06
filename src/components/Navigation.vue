@@ -3,28 +3,37 @@
     <div class="card layout-row flat map-card">
       <section class="card pb-16 pr-16 flex-auto layout-column justify-content-center">
         <ul class="pl-0" data-testid="location-list">
-
-          <!--          Use this li for rendering each location item as it contains all the data-testid attributes required for the tests to pass-->
-          <!--          <li-->
-          <!--              :key="'row' + index" :data-testid="'location-' + index"-->
-          <!--              class="layout-row justify-content-between align-items-center mr-8 pl-40 relative">-->
-          <!--            <div class="layout-column justify-content-start align-items-center handle">-->
-          <!--              <i :class="this.getClasses('marker', index)">-->
-          <!--                {{ this.isLast(index) ? 'room' : 'radio_button_checked' }}</i>-->
-          <!--              <i :class="this.getClasses('dots', index)">more_vert</i>-->
-          <!--            </div>-->
-          <!--            <div class="location-name">-->
-          <!--              <p class="caption text-start mb-4" data-testid="location">{{ location }}</p>-->
-          <!--            </div>-->
-          <!--            <div>-->
-          <!--              <button class="icon-only small mx-0" data-testid="up-button">-->
-          <!--                <i class="material-icons">arrow_upward</i>-->
-          <!--              </button>-->
-          <!--              <button class="icon-only small mx-0" data-testid="down-button">-->
-          <!--                <i class="material-icons">arrow_downward</i>-->
-          <!--              </button>-->
-          <!--            </div>-->
-          <!--          </li>-->
+          <li
+            v-for="(location, index) in locations"
+            :key="'row' + index" 
+            :data-testid="'location-' + index"
+            class="layout-row justify-content-between align-items-center mr-8 pl-40 relative"
+          >
+            <div class="layout-column justify-content-start align-items-center handle">
+              <i :class="this.getClasses('marker', index)">
+                {{ this.isLast(index) ? 'room' : 'radio_button_checked' }}</i>
+              <i :class="this.getClasses('dots', index)">more_vert</i>
+            </div>
+            <div class="location-name">
+              <p class="caption text-start mb-4" data-testid="location">{{ location }}</p>
+            </div>
+            <div>
+              <button
+                v-if="index === 0"
+                class="icon-only small mx-0" 
+                data-testid="up-button"
+              >
+                <i class="material-icons">arrow_upward</i>
+              </button>
+              <button
+                v-if="this.isLast(index)"
+                class="icon-only small mx-0"
+                data-testid="down-button"
+              >
+                <i class="material-icons">arrow_downward</i>
+              </button>
+            </div>
+          </li>
         </ul>
       </section>
       <section class="flex-auto">
@@ -41,6 +50,11 @@ export default {
   props: {
     locations: Array
   },
+
+  data: () => ({
+    myLocations: this.locations
+  }),
+
   methods: {
     // Used for rendering
     getClasses(ctx, index) {
@@ -57,9 +71,36 @@ export default {
       }
       return classes;
     },
+
     // Used for rendering
     isLast(index) {
       return index === this.locations.length - 1;
+    },
+
+    isFirst(index) {
+      return index === 0;
+    },
+
+    nextLocation(index) {
+      let locationList = this.myLocations;
+      let orgData = locationList[index];
+      let tempData = locationList[index + 1];
+
+      locationList[index] = tempData;
+      locationList[index + 1] = orgData;
+
+      this.myLocations = locationList;
+    },
+
+    prevLocation(index) {
+      let locationList = this.myLocations;
+      let orgData = locationList[index];
+      let tempData = locationList[index - 1];
+
+      locationList[index] = tempData;
+      locationList[index - 1 ] = orgData;
+
+      this.myLocations = locationList;
     }
   }
 }
