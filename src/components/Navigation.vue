@@ -19,6 +19,7 @@
             </div>
             <div>
               <button
+                @click="this.prevLocation"
                 v-if="index === 0"
                 class="icon-only small mx-0" 
                 data-testid="up-button"
@@ -26,6 +27,7 @@
                 <i class="material-icons">arrow_upward</i>
               </button>
               <button
+                @click="this.nextLocation"
                 v-if="this.isLast(index)"
                 class="icon-only small mx-0"
                 data-testid="down-button"
