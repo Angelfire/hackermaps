@@ -4,14 +4,15 @@
       <section class="card pb-16 pr-16 flex-auto layout-column justify-content-center">
         <ul class="pl-0" data-testid="location-list">
           <li
-            v-for="(location, index) in locations"
+            v-for="(location, index) in newLocations"
             :key="'row' + index" 
             :data-testid="'location-' + index"
             class="layout-row justify-content-between align-items-center mr-8 pl-40 relative"
           >
             <div class="layout-column justify-content-start align-items-center handle">
               <i :class="this.getClasses('marker', index)">
-                {{ this.isLast(index) ? 'room' : 'radio_button_checked' }}</i>
+                {{ this.isLast(index) ? 'room' : 'radio_button_checked' }}
+              </i>
               <i :class="this.getClasses('dots', index)">more_vert</i>
             </div>
             <div class="location-name">
@@ -19,16 +20,16 @@
             </div>
             <div>
               <button
-                @click="this.prevLocation"
-                v-if="index === 0"
-                class="icon-only small mx-0" 
+                v-if="!this.isFirst(index)"
+                @click="this.prevLocation(index)"
+                class="icon-only small mx-0"
                 data-testid="up-button"
               >
                 <i class="material-icons">arrow_upward</i>
               </button>
               <button
-                @click="this.nextLocation"
-                v-if="this.isLast(index)"
+                v-if="!this.isLast(index)"
+                @click="this.nextLocation(index)"
                 class="icon-only small mx-0"
                 data-testid="down-button"
               >
@@ -49,12 +50,17 @@
 <script>
 export default {
   name: "Navigation",
+
   props: {
     locations: Array
   },
 
+  created() {
+    this.newLocations = this.locations
+  },
+
   data: () => ({
-    myLocations: this.locations
+    newLocations: []
   }),
 
   methods: {
@@ -84,27 +90,27 @@ export default {
     },
 
     nextLocation(index) {
-      let locationList = this.myLocations;
+      let locationList = this.newLocations;
       let orgData = locationList[index];
       let tempData = locationList[index + 1];
 
       locationList[index] = tempData;
       locationList[index + 1] = orgData;
 
-      this.myLocations = locationList;
+      this.newLocations = locationList;
     },
 
     prevLocation(index) {
-      let locationList = this.myLocations;
+      let locationList = this.newLocations;
       let orgData = locationList[index];
       let tempData = locationList[index - 1];
 
       locationList[index] = tempData;
       locationList[index - 1 ] = orgData;
 
-      this.myLocations = locationList;
-    }
-  }
+      this.newLocations = locationList;
+    },
+  },
 }
 </script>
 
