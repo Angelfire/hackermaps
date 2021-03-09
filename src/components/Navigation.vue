@@ -106,7 +106,7 @@ export default {
       let tempData = locationList[index - 1];
 
       locationList[index] = tempData;
-      locationList[index - 1 ] = orgData;
+      locationList[index - 1] = orgData;
 
       this.newLocations = locationList;
     },
